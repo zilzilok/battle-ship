@@ -9,4 +9,8 @@ public class EmptySea extends Ship{
     public boolean shootAt(int row, int column) { return false; }
 
     public boolean isSunk() { return false; }
+
+    public String getShipType(){
+        return "EmptySea";
+    }
 }

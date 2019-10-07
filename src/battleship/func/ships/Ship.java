@@ -49,14 +49,17 @@ public abstract class Ship {
         return "Ship";
     }
 
-    public boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean)
-            throws ArrayIndexOutOfBoundsException {
+    public boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) throws ShipException {
         if (horizontal){
+            if (column + getLength() - 1 > 9)
+                throw new ShipException("The ship out of the field!");
             for (int i = 0; i < getLength(); i++) {
                 if (ocean.isOccupied(row, column + i))
                     return false;
             }
         } else{
+            if (row + getLength() - 1 > 9)
+                throw new ShipException("The ship out of the field");
             for (int i = 0; i < getLength(); i++) {
                 if (ocean.isOccupied(row + i, column))
                     return false;
@@ -65,32 +68,30 @@ public abstract class Ship {
         return true;
     }
 
-    public void placeShipAt(int row, int column, boolean horizontal, Ocean ocean){
-        if (okToPlaceShipAt(row, column, horizontal, ocean)){
-            if (horizontal){
-                for (int i = 0; i < getLength(); i++) {
-                    setBowColumn(column);
-                    setBowRow(row);
-                    setHorizontal(true);
-                    ocean.getShips()[row][column + i] = this;
-                }
-            } else{
-                for (int i = 0; i < getLength(); i++) {
-                    setBowColumn(column);
-                    setBowRow(row);
-                    setHorizontal(false);
-                    ocean.getShips()[row + i][column] = this;
-                }
+    public void placeShipAt(int row, int column, boolean horizontal, Ocean ocean) {
+        if (horizontal){
+            for (int i = 0; i < getLength(); i++) {
+                setBowColumn(column);
+                setBowRow(row);
+                setHorizontal(true);
+                ocean.getShips()[row][column + i] = this;
+            }
+        } else{
+            for (int i = 0; i < getLength(); i++) {
+                setBowColumn(column);
+                setBowRow(row);
+                setHorizontal(false);
+                ocean.getShips()[row + i][column] = this;
             }
         }
     }
 
     public boolean shootAt(int row, int column){
         if (isHorizontal()){
-            if (getBowRow() == row && column >= getBowColumn() && column <= getBowColumn() + getLength() && !isSunk())
+            if (row == getBowRow() && column >= getBowColumn() && column <= getBowColumn() + getLength() - 1 && !isSunk())
                 return  true;
         } else {
-            if (getBowColumn() == column && row >= getBowRow() && row <= getBowRow() + getLength() && !isSunk())
+            if (column == getBowColumn() && row >= getBowRow() && row <= getBowRow() + getLength() - 1 && !isSunk())
                 return  true;
         }
         return false;
