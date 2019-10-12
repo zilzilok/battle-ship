@@ -5,7 +5,6 @@ public class Random {
     private static java.util.Random rng = new java.util.Random();
 
     /**
-     *
      * @param min minimal number for random
      * @param max maximal number for random
      * @return random number from min to max

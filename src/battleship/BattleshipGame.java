@@ -6,6 +6,10 @@ import battleship.func.ships.ShipException;
 import java.util.Scanner;
 
 public class BattleshipGame {
+    /**
+     * Main method
+     * @param args
+     */
     public static void main(String[] args) {
         Ocean ocean = new Ocean();
         ocean.printWithShips();
@@ -24,6 +28,12 @@ public class BattleshipGame {
         System.out.println("Game is over. My congratulations <3");
     }
 
+    /**
+     * Print information about your shoot. Calls battleship.func.Ocean.print() too.
+     * @param ocean current ocean
+     * @param row current row
+     * @param column current column
+     */
     private static void printInfo(Ocean ocean, int row, int column){
         if (ocean != null){
             try {
