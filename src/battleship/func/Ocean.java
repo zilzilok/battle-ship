@@ -19,12 +19,6 @@ public class Ocean {
             new Destroyer(), new Destroyer(), new Destroyer(),
             new Submarine(), new Submarine(), new Submarine(), new Submarine()};
 
-    public Ocean(){
-        ships = new Ship[MAX_SIZE][MAX_SIZE];
-        initializeShips();
-        placeAllShipsRandomly();
-    }
-
     public Ship[][] getShipArray() {
         return ships;
     }
@@ -34,6 +28,12 @@ public class Ocean {
     public int getHitCount() { return hitCount; }
 
     public int getShipsSunk() { return shipsSunk; }
+
+    public Ocean(){
+        ships = new Ship[MAX_SIZE][MAX_SIZE];
+        initializeShips();
+        placeAllShipsRandomly();
+    }
 
     private void initializeShips() {
         for (int i = 0; i < MAX_SIZE; i++) {
@@ -129,23 +129,31 @@ public class Ocean {
     }
 
     public void placeShipRandomly(Ship ship){
-        while (true){
-            int column = Random.getIntNumber(MIN_SIZE, MAX_SIZE - 1);
-            int row = Random.getIntNumber(MIN_SIZE, MAX_SIZE - 1);
-            boolean horizontal = Random.getBoolean();
-            try{
-                if(!ship.okToPlaceShipAt(row, column, horizontal, this))
-                    continue;
-                ship.placeShipAt(row, column, horizontal, this);
-                break;
-            } catch (ShipException ex) {}
+        if (ship != null){
+            while (true){
+                int column = Random.getIntNumber(MIN_SIZE, MAX_SIZE - 1);
+                int row = Random.getIntNumber(MIN_SIZE, MAX_SIZE - 1);
+                boolean horizontal = Random.getBoolean();
+                try{
+                    if(!ship.okToPlaceShipAt(row, column, horizontal, this))
+                        continue;
+                    ship.placeShipAt(row, column, horizontal, this);
+                    break;
+                } catch (ShipException ex) {}
+            }
         }
     }
 
-    public boolean shootAt(int row, int column){
+    public boolean shootAt(int row, int column) throws ShipException {
         shotsFired++;
+        if (getShipArray()[row][column].getNumberOfHits() == getShipArray()[row][column].getLength())
+            throw new ShipException("Ship has been already sunk!");
         if (getShipArray()[row][column].shootAt(row, column)){
             hitCount++;
+            if (getShipArray()[row][column].isSunk()){
+                shipsSunk++;
+                throw new ShipException("Congrats! The ship has been sunk.");
+            }
             return true;
         }
         return false;
@@ -153,7 +161,7 @@ public class Ocean {
 
     public boolean isGameOver() { return getShipsSunk() == 10; }
 
-    public void print(){
+    public void printWithShips(){
         System.out.println("  0 1 2 3 4 5 6 7 8 9");
         for (int i = 0; i < MAX_SIZE; i++) {
             System.out.print(i + " ");
@@ -165,5 +173,39 @@ public class Ocean {
             }
             System.out.println();
         }
+    }
+
+    public void print(){
+        System.out.print("Number of hits/shots: " + getHitCount() + "/" + getShotsFired() + "\n");
+        System.out.print("Number of ships sunk: " + getShipsSunk() + "\n");
+        System.out.println("  0 1 2 3 4 5 6 7 8 9");
+        Ship currShip;
+        for (int i = 0; i < MAX_SIZE; i++) {
+            System.out.print(i + " ");
+            for (int j = 0; j < MAX_SIZE; j++) {
+                currShip = ships[i][j];
+                if (isOccupied(i, j)){
+                    if (currShip.isHorizontal())
+                        printHorizontal(j, currShip);
+                    else
+                        printVertical(i, currShip);
+                } else
+                    System.out.print(currShip);
+            }
+            System.out.println();
+        }
+    }
+
+    private void printHorizontal(int column, Ship currShip){
+        if (currShip.getHit()[column - currShip.getBowColumn()])
+            System.out.print(currShip);
+        else
+            System.out.print("- ");
+    }
+    private void printVertical(int row, Ship currShip){
+        if (currShip.getHit()[row - currShip.getBowRow()])
+            System.out.print(currShip);
+        else
+            System.out.print("- ");
     }
 }

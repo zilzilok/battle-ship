@@ -6,6 +6,7 @@ public class Submarine extends Ship {
         setHit(new boolean[getLength()]);
     }
 
+    @Override
     public String getShipType(){
         return "Submarine";
     }

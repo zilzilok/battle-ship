@@ -6,6 +6,7 @@ public class Battleship extends Ship {
         setHit(new boolean[getLength()]);
     }
 
+    @Override
     public String getShipType(){
         return "Battleship";
     }

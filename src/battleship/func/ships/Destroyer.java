@@ -6,6 +6,7 @@ public class Destroyer extends Ship {
         setHit(new boolean[getLength()]);
     }
 
+    @Override
     public String getShipType(){
         return "Destroyer";
     }
