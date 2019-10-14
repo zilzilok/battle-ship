@@ -11,12 +11,15 @@ public class BattleshipGame {
      * @param args arguments
      */
     public static void main(String[] args) {
-        startGame();
-        while (!ocean.isGameOver()){
-            getCoordinate();
-            printInfo(ocean);
-        }
-        System.out.println("Game is over. My congratulations <3");
+        do {
+            startGame();
+            while (!ocean.isGameOver()){
+                getCoordinate();
+                printInfo(ocean);
+            }
+            System.out.println("Game is over. My congratulations <3");
+        }while (isGameRepeat());
+
     }
 
     private static int row = 0;
@@ -30,7 +33,7 @@ public class BattleshipGame {
         Scanner scanner = new Scanner(System.in);
         boolean passed = false;
         do{
-            System.out.println("Write row [0, 9]: ");
+            System.out.print("Write row [0, 9]: ");
             try {
                 row = Integer.parseInt(scanner.nextLine());
                 if (row < 0 || row > 9)
@@ -42,7 +45,7 @@ public class BattleshipGame {
         }while (!passed);
         passed = false;
         do{
-            System.out.println("Write column [0, 9]: ");
+            System.out.print("Write column [0, 9]: ");
             try {
                 column = Integer.parseInt(scanner.nextLine());
                 if (column < 0 || column > 9)
@@ -78,6 +81,18 @@ public class BattleshipGame {
      */
     private static void startGame(){
         ocean = new Ocean();
+        ocean.printWithShips();
         ocean.print();
+    }
+
+    /**
+     * @return true if you want to play again, otherwise false
+     */
+    private static boolean isGameRepeat(){
+        Scanner scanner = new Scanner(System.in);
+        String exit = "";
+        System.out.print("If you don't want to play again, print \"exit\": ");
+        exit = scanner.nextLine();
+        return !exit.equals("exit");
     }
 }
