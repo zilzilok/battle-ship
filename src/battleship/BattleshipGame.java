@@ -7,34 +7,58 @@ import java.util.Scanner;
 
 public class BattleshipGame {
     /**
-     * Main method
-     * @param args
+     * Main method of the program.
+     * @param args arguments
      */
     public static void main(String[] args) {
-        Ocean ocean = new Ocean();
-        ocean.printWithShips();
-        ocean.print();
-        Scanner scanner = new Scanner(System.in);
-        int row, column;
-        String exit = "";
-        while (!ocean.isGameOver() && !exit.equals("exit")){
-            System.out.println("Write row and column: ");
-            row = scanner.nextInt();
-            column = scanner.nextInt();
-            printInfo(ocean, row, column);
-            System.out.println("To close the program, write \"exit\"");
-            exit = scanner.nextLine();
+        startGame();
+        while (!ocean.isGameOver()){
+            getCoordinate();
+            printInfo(ocean);
         }
         System.out.println("Game is over. My congratulations <3");
     }
 
+    private static int row = 0;
+    private static int column = 0;
+    private static Ocean ocean;
+
     /**
-     * Print information about your shoot. Calls battleship.func.Ocean.print() too.
-     * @param ocean current ocean
-     * @param row current row
-     * @param column current column
+     * Gets row and column of the shoot correctly.
      */
-    private static void printInfo(Ocean ocean, int row, int column){
+    private static void getCoordinate(){
+        Scanner scanner = new Scanner(System.in);
+        boolean passed = false;
+        do{
+            System.out.println("Write row [0, 9]: ");
+            try {
+                row = Integer.parseInt(scanner.nextLine());
+                if (row < 0 || row > 9)
+                    throw new NumberFormatException();
+                passed = true;
+            } catch (NumberFormatException ex) {
+                System.out.println("Input error!");
+            }
+        }while (!passed);
+        passed = false;
+        do{
+            System.out.println("Write column [0, 9]: ");
+            try {
+                column = Integer.parseInt(scanner.nextLine());
+                if (column < 0 || column > 9)
+                    throw new NumberFormatException();
+                passed = true;
+            } catch (NumberFormatException ex) {
+                System.out.println("Input error!");
+            }
+        }while (!passed);
+    }
+
+    /**
+     * Prints information about your shoot. Calls battleship.func.Ocean.print() too.
+     * @param ocean current ocean
+     */
+    private static void printInfo(Ocean ocean){
         if (ocean != null){
             try {
                 if (ocean.shootAt(row, column))
@@ -47,5 +71,13 @@ public class BattleshipGame {
                 ocean.print();
             }
         }
+    }
+
+    /**
+     * Initializes current Ocean and prints him.
+     */
+    private static void startGame(){
+        ocean = new Ocean();
+        ocean.print();
     }
 }

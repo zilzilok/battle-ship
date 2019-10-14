@@ -3,7 +3,7 @@ package battleship.func.ships;
 
 public class EmptySea extends Ship{
     public EmptySea(){
-        setLength(1);
+        setLength(-1);
     }
 
     @Override
