@@ -81,7 +81,7 @@ public class BattleshipGame {
      */
     private static void startGame(){
         ocean = new Ocean();
-        ocean.printWithShips();
+        //ocean.printWithShips();   // uncomment, if you want to check ships location
         ocean.print();
     }
 
